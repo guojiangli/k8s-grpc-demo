@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"net"
 	"os"
 	"os/signal"
@@ -18,9 +19,9 @@ import (
 
 var (
 	serv = flag.String("service", "hello_service", "service name")
-	host = flag.String("host", "localhost", "listening host")
+	host = flag.String("host", GetLocalIP(), "listening host")
 	port = flag.String("port", "50001", "listening port")
-	reg  = flag.String("reg", "http://localhost:2379", "register etcd address")
+	reg  = flag.String("reg", "http://etcd3:2379", "register etcd address") //如果是本地就把etcd3替换成127.0.0.1
 )
 
 func main() {
@@ -58,4 +59,24 @@ type server struct{}
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	logrus.Infof("%v: Receive is %s\n", time.Now(), in.Name)
 	return &pb.HelloReply{Message: "Hello " + in.Name + " from " + net.JoinHostPort(*host, *port)}, nil
+}
+
+//h获取本地IP
+func GetLocalIP() string {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	for _, address := range addrs {
+		// 检查ip地址判断是否回环地址
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil { //本地网卡eth0的ip
+				return ipnet.IP.String()
+			}
+		}
+	}
+
+	return ""
 }

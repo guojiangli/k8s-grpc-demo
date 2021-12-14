@@ -17,7 +17,7 @@ import (
 
 var (
 	svc = flag.String("service", "hello_service", "service name")
-	reg = flag.String("reg", "http://localhost:2379", "register etcd address")
+	reg = flag.String("reg", "http://etcd3:2379", "register etcd address") //如果是本地就把etcd3替换成127.0.0.1
 )
 
 func main() {
@@ -25,7 +25,7 @@ func main() {
 	r := grpclb.NewResolver(*reg, *svc)
 	resolver.Register(r)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10000000*time.Second)
 	// https://github.com/grpc/grpc/blob/master/doc/naming.md
 	// The gRPC client library will use the specified scheme to pick the right resolver plugin and pass it the fully qualified name string.
 	conn, err := grpc.DialContext(ctx, r.Scheme()+"://authority/"+*svc, grpc.WithInsecure(), grpc.WithBalancerName(roundrobin.Name), grpc.WithBlock())

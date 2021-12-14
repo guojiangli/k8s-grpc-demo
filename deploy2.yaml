@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8sdemo-deploy2
+  labels:
+    app: k8sdemo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8sdemo
+  template:
+    metadata:
+      labels:
+        app: k8sdemo
+    spec:
+      containers:
+      - name: k8sdemo2
+        image: k8s-grpc-demo2:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 50011
