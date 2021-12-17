@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: k8sdemo-cli-deploy
+  name: k8sdemo-deploy-cli
   labels:
-    app: k8sdemo
+    app: k8sdemo-cli
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: k8sdemo
+      app: k8sdemo-cli
   template:
     metadata:
       labels:
-        app: k8sdemo
+        app: k8sdemo-cli
     spec:
       containers:
-      - name: k8sdemocli
-        image: k8s-grpc-demo3:latest
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 50010
+        - name: k8sdemo2
+          image: k8s-grpc-demo2:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 50011

@@ -61,7 +61,7 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 	return &pb.HelloReply{Message: "Hello " + in.Name + " from " + net.JoinHostPort(*host, *port)}, nil
 }
 
-//h获取本地IP
+//获取本地eth0 IP
 func GetLocalIP() string {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {

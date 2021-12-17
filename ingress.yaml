@@ -1,0 +1,58 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8sdemo-ingress-prefix
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: hi.k8sdemo.com
+      http:
+        paths:
+          - path: "/hello"
+            pathType: Prefix
+            backend:
+              service:
+                name: k8sdemo-svc
+                port:
+                  number: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8sdemo-ingress-rewrite
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - host: hello.k8sdemo.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/api(/|$)(.*)"  # 把请求会转给下面的服务，下面的服务一定要能处理这个路径，不能处理就是404
+            backend:
+              service:
+                name: k8sdemo-svc  ## golang，比如使用路径重写，去掉前缀api
+                port:
+                  number: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8sdemo-ingress-limit-rate
+  annotations:
+    nginx.ingress.kubernetes.io/limit-rps: "1" # rps：每秒多少请求 超过之后就报错 https status: 503
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: hi.k8sdemo.com
+      http:
+        paths:
+          - pathType: Exact
+            path: "/hello" # 针对这个路径限流
+            backend:
+              service:
+                name: k8sdemo-svc
+                port:
+                  number: 8000
