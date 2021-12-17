@@ -18,5 +18,3 @@ spec:
       - name: k8sdemo
         image: k8s-grpc-demo:v2
         imagePullPolicy: Never
-        ports:
-        - containerPort: 50007
