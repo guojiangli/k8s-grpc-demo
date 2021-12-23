@@ -1,0 +1,10 @@
+FROM golang AS build-env
+WORKDIR /go/src/app
+ADD . /go/src/app
+RUN GOOS=linux GOARCH=386 go build -mod vendor cmd/cli/cli.go
+
+FROM alpine
+COPY --from=build-env /go/src/app/cli /usr/local/bin/cli
+
+
+CMD ["cli"]

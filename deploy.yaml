@@ -4,17 +4,34 @@ metadata:
   name: k8sdemo-deploy
   labels:
     app: k8sdemo
+    version: 1.0.0
 spec:
+  minReadySeconds: 5
+  strategy:
+    # indicate which strategy we want for rolling update
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   replicas: 1
   selector:
     matchLabels:
       app: k8sdemo
+      version: 1.0.0
   template:
     metadata:
       labels:
         app: k8sdemo
+        version: 1.0.0
     spec:
       containers:
       - name: k8sdemo
-        image: k8s-grpc-demo:v2
+        image: k8s-grpc-demo:v10
         imagePullPolicy: Never
+        resources:
+          requests:
+            memory: "10Mi"
+            cpu: "5m"
+          limits:
+            memory: "10Mi"
+            cpu: "5m"

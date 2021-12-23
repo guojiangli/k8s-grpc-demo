@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8sdemo-deploy-old
+  labels:
+    app: k8sdemo
+    version: 1.0.1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8sdemo
+      version: 1.0.1
+  template:
+    metadata:
+      labels:
+        app: k8sdemo
+        version: 1.0.1
+    spec:
+      containers:
+      - name: k8sdemo
+        image: k8s-grpc-demo:v6
+        imagePullPolicy: Never

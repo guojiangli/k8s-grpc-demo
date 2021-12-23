@@ -46,7 +46,7 @@ func main() {
 		os.Exit(1)
 	}()
 
-	logrus.Infof("starting hello service at %s", *port)
+	logrus.Infof("starting hello service at: %s", *port)
 	s := grpc.NewServer()
 	pb.RegisterGreeterServer(s, &server{})
 	s.Serve(lis)
@@ -58,7 +58,7 @@ type server struct{}
 // SayHello implements helloworld.GreeterServer
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	logrus.Infof("%v: Receive is %s\n", time.Now(), in.Name)
-	return &pb.HelloReply{Message: "Hello " + in.Name + " from " + net.JoinHostPort(*host, *port)}, nil
+	return &pb.HelloReply{Message: "[upgrade] Hello " + in.Name + " from " + net.JoinHostPort(*host, *port)}, nil
 }
 
 //获取本地eth0 IP
